@@ -1,0 +1,29 @@
+# OASIS_START
+# DO NOT EDIT (digest: 1188ad7297ef16b60094f397bce2b28b)
+# Library nntplight
+"lib_nntp": include
+<lib_nntp/*.ml{,i}>: pkg_unix
+# Library daemonstub
+"daemon": include
+"daemon/daemonstub.cmxa": use_libdaemonstub
+# Executable moderator
+"main/data_edit.native": use_nntplight
+"main/data_edit.native": pkg_unix
+# Executable gen_data
+"main/gen_data.native": use_nntplight
+"main/gen_data.native": pkg_unix
+# Executable tester
+"test_nntp.native": use_nntplight
+"test_nntp.native": pkg_unix
+<*.ml{,i}>: use_nntplight
+<*.ml{,i}>: pkg_unix
+# Executable cadavre
+"main/main.native": use_daemonstub
+"main/main.native": use_nntplight
+"main/main.native": pkg_unix
+"main/main.native": pkg_threads
+<main/*.ml{,i}>: use_daemonstub
+<main/*.ml{,i}>: use_nntplight
+<main/*.ml{,i}>: pkg_unix
+<main/*.ml{,i}>: pkg_threads
+# OASIS_STOP
