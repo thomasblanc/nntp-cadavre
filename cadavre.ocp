@@ -1,0 +1,46 @@
+begin library "threads"
+    generated = true
+    dirname = [ "%{OCAMLLIB}%/threads" ]
+    has_byte = false
+end
+
+
+begin library "daemon"
+ dirname = "daemon"
+ files = [ "daemon_stub.c" "daemon.ml" ]
+end
+
+begin library "nntp"
+ dirname = "lib_nntp"
+ files = [ "wildmat.ml" "server.mll" "article.mll" "nntp_helpers.ml" "nntp.ml"]
+ requires = [ "unix" ]
+end
+
+begin library "cadavre-common"
+ dirname = "main"
+ files = [ "config.mll" "data.mll" ]
+ requires = [ "nntp" ]
+end
+
+begin program "cadavre"
+ dirname = "main"
+ comp = [ "-thread" ] link = [ "-thread" ]
+ files =
+  [
+   "cadavre.ml" "cadavre_parse.mll"
+   "main.ml"
+  ]
+ requires = [ "daemon" "unix" "threads" "threads.posix" "nntp" "cadavre-common" ]
+end
+
+begin program "gen_data"
+ dirname = "main"
+ files = [ "gen_data.ml" ]
+ requires = [ "cadavre-common" ]
+end
+
+begin program "moderator"
+ dirname = "main"
+ files = [ "data_edit.ml" ]
+ requires = [ "cadavre-common" ]
+end
