@@ -1,0 +1,17 @@
+Requirements:
+
+OCaml (>= 3.11) with unix support
+Linux (not tested on other platforms)
+ocp-build (>= 1.99)
+gcc (not tested with other compilers)
+
+Commands:
+
+In the root of the directory:
+
+$ ocp-build -init
+$ ocp-build configure
+$ ocp-build build
+$ ocp-build install
+
+You need to be admin for the install part, you can specify a local folder during the configure step.
