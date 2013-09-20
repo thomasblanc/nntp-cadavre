@@ -6,6 +6,8 @@ It is currently only aimed at French sentences and UTF-8 posting, but can be eas
 
 Pretty much is self-explanatory, but I'd be glad to answer any questions.
 
+For licensing, see LICENCE file
+
 == Cadavre exquis pour forum NNTP ==
 
 Ce programme poste des cadavres exquis sur un serveur NNTP.
@@ -13,3 +15,5 @@ Ce programme poste des cadavres exquis sur un serveur NNTP.
 À l'heure actuelle il est pensé pour le français et ne supporte que l'UTF-8. Il peut-être facilement adapté, toutefois, à condition d'avoir une connaissance minimale du langage OCaml.
 
 À peu près tout le code se comprend de lui-même, mais je serai ravis de répondre à des questions.
+
+Les informations de licenses sont dans le fichier LICENCE
