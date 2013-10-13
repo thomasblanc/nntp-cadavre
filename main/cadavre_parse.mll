@@ -20,7 +20,7 @@ let gen_table root group bottom =
 	  [|
 	    [|"","e";"","es";"","e";"","ons";"","ez";"","ent" |];
 	    [|"","ais";"","ais";"","ait";"","ions";"","iez";"","aient"|];
-	    [|"","erai";"","eras";"","erai";"","erons";"","erez";"","eront"|];
+	    [|"","erai";"","eras";"","era";"","erons";"","erez";"","eront"|];
 	    [|"ai ","é";"as ","é";"a ","é";"avons ","é";"avez ","é";"ont ","é"|]
 	  |]
       | "ir" ->
