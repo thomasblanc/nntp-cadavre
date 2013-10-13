@@ -18,7 +18,7 @@ end
 
 begin library "cadavre-common"
  dirname = "main"
- files = [ "config.mll" "data.mll" ]
+ files = [ "config.mll" "date.mll" "data.mll" "data2.mll" ]
  requires = [ "nntp" ]
 end
 
@@ -36,6 +36,12 @@ end
 begin program "gen_data"
  dirname = "main"
  files = [ "gen_data.ml" ]
+ requires = [ "cadavre-common" ]
+end
+
+begin program "new_data"
+ dirname = "data_trans"
+ files = [ "main.ml" ]
  requires = [ "cadavre-common" ]
 end
 

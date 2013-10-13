@@ -20,19 +20,19 @@ rule conffile lastp lastid lastt = parse
 | lp eq ( num as n ) endl
     { conffile (i n) lastid lastt lexbuf }
 | li eq ( any as s ) endl
-    { conffile lastp s lastid lastt lexbuf }
-| lt eq any endl
+    { conffile lastp s lastt lexbuf }
+| lt eq ( any as s ) endl
     { conffile lastp lastid (Date.of_string s) lexbuf }
 | eof { (lastp, lastid, lastt) }
-| _ { raise Invalid_arg "data file" }
+| _ { raise ( Invalid_argument "data file" ) }
 
-rule subject = parse
+and subject = parse
 | ( any as s ) endl
   ( num as n ) ef
   { s, pred (i n) }
-| _ { raise ( Invalid_arg "subject file" ) }
+| _ { raise ( Invalid_argument "subject file" ) }
 
-rule verb = parse
+and verb = parse
 | (any as w1) endl (any as w2) endl (any as w3) endl (any as w4) endl (any as w5) endl (any as w6) endl
   (any as x1) endl (any as x2) endl (any as x3) endl (any as x4) endl (any as x5) endl (any as x6) endl
   (any as y1) endl (any as y2) endl (any as y3) endl (any as y4) endl (any as y5) endl (any as y6) endl
@@ -45,17 +45,17 @@ rule verb = parse
      [|z1;z2;z3;z4;z5;z6|]
     |]
    }
-| _ { raise ( Invalid_arg "verb file" )
+| _ { raise ( Invalid_argument "verb file" ) }
 
-rule comp_or_place = parse
+and comp_or_place = parse
 | ( any as s ) ef
     { s }
-| _ { raise ( Invalid_arg "comp or place file" )
+| _ { raise ( Invalid_argument "comp or place file" ) }
 
-rule date = parse
+and date = parse
 | ( any as s ) endl ( num as n ) ef
     { s, pred ( i n ) }
-| _ { raise ( Invalid_arg "date file" ) }
+| _ { raise ( Invalid_argument "date file" ) }
 
 {
 
@@ -64,7 +64,7 @@ rule date = parse
         {
           last_post = 0;
           last_seen_number = "";
-          last_time = mktime ( time () );
+          last_time = mktime ( gmtime ( time () ) );
           subjects = [||];
           verbs = [||];
           comps = [||];
@@ -93,7 +93,11 @@ rule date = parse
       | "settings" ->
         let (lp, li, lt) =
           olex
-            (conffile lastp lastid lastt lb)
+            ( conffile
+                !data.last_post
+                !data.last_seen_number
+                !data.last_time
+            )
             fl
         in
         data :=
@@ -117,6 +121,7 @@ rule date = parse
       | "places" ->
         data := {!data with places = alex comp_or_place fl; };
         aux ()
+      | _ -> aux ()
 
     in
     try aux () with Not_found -> !data
@@ -134,12 +139,12 @@ let save_data da dir =
   let file f num = Filename.concat ( file f ) ( si num ) in
   Array.iteri (fun n (s,i) ->
       let sf = open_out (file "subject" n) in
-      Printf.fprintf sf "%s\n%d" s (si (succ i));
+      Printf.fprintf sf "%s\n%d" s (succ i);
       close_out sf)
-    da.subject;
+    da.subjects;
   Array.iteri (fun n a ->
       let vf = open_out (file "verbs" n) in
-      Array.iter ( Array.iter ( Printf.fprintf vf "%s\n" ) ) a
+      Array.iter ( Array.iter ( Printf.fprintf vf "%s\n" ) ) a;
       close_out vf)
     da.verbs;
   Array.iteri (fun n s ->
@@ -149,7 +154,7 @@ let save_data da dir =
     da.comps;
   Array.iteri (fun n (s,i) ->
       let sf = open_out (file "dates" n) in
-      Printf.fprintf sf "%s\n%d" s (si (succ i));
+      Printf.fprintf sf "%s\n%d" s (succ i);
       close_out sf)
     da.dates;
   Array.iteri (fun n s ->

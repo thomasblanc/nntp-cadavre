@@ -25,7 +25,7 @@ let decal_sign = ['-''+']
 let decal = cy cy cy cy
 let id = '<'[^'>']+'>'
 
-rule date = 
+rule date = parse
 | (wd as wd)", "(md as md)' '(month as mon)' '(year as y)' '(hour as h)':'(min as min)':'(sec as sec)' '(decal_sign as ds) (hour as dh) (min as dm)
   {
     let i = int_of_string in
@@ -39,6 +39,7 @@ rule date =
         let ty_e =  this_y mod 100 in
         (if year <= ty_e then this_y-ty_e+year else this_y-ty_e+year-100)
     in
+    let open Unix in
     mktime
       {
         tm_sec = (i sec)+decal_hour;
@@ -52,17 +53,18 @@ rule date =
         tm_isdst = false
       }
   }
-| _ { raise Invalid_arg "date" }
+| _ { raise ( Invalid_argument "date" ) }
 
 {
-  let of_string s = date ( Lexing.of_string s )
+  let of_string s = date ( Lexing.from_string s )
 
-  let to_string d = 
+  let to_string g = 
     let to_wd = function
         0 -> "Sun" | 1 -> "Mon" | 2 -> "Tue" | 3 -> "Wed" | 4 -> "Thu" | 5 -> "Fri" | 6 -> "Sat" | _ -> assert false
     and to_mon = function
         0 -> "Jan" | 1 -> "Feb" | 2 -> "Mar" | 3 -> "Apr" | 4 -> "May" | 5 -> "Jun" | 6 -> "Jul"
       | 7 -> "Aug" | 8 -> "Sep" | 9 -> "Oct" | 10 -> "Nov" | 11 -> "Dec" | _ -> assert false
     in
+    let open Unix in
     Printf.sprintf "%s, %0d %s %0d %02d:%02d:%02d +0000 (UTC)" (to_wd g.tm_wday) g.tm_mday (to_mon g.tm_mon) (g.tm_year +1900) g.tm_hour g.tm_min g.tm_sec
 }
