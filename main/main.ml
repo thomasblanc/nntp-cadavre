@@ -53,7 +53,7 @@ let keep_mutex = Mutex.create ();;
 
 let rec looping () =
  let t = Unix.time () in
- Printf.printf "It is now %f !\n" t;
+ (* Printf.printf "It is now %f !\n" t; *)
   begin
   try check () with
     Failure "Connecting" | Unix.Unix_error(Unix.ECONNREFUSED,_,_) -> ()
