@@ -15,20 +15,21 @@ let get_data file =
  let f = open_in_bin file in
  let d = Marshal.from_channel f in
  close_in f; d
+
 let save_data d file =
- let f = open_out_bin file in
- Marshal.to_channel f d [];
- close_out f;;
+  let f = open_out_bin file in
+  Marshal.to_channel f d [];
+  close_out f
 
 let ask_last_number () =
- let c = Nntp.connection_as_reader Config.server Config.port in
- let c =
-   let l = Config.login and p = Config.password in
-   if l <> "" && p <> "" then Nntp.authentificate c l p else c
- in
- let (_,_,h,_) = Nntp.group c Config.group in
- Nntp.close c; h;;
-
+  let c = Nntp.connection_as_reader Config.server Config.port in
+  let l = Config.login and p = Config.password in
+  ( if l <> "" && p <> ""
+    then Nntp.authentificate c l p
+    else () );
+  let (_,_,h,_) = Nntp.group c Config.group in
+  Nntp.close c; h
+  
 }
 
 let endl = '\r'?'\n'

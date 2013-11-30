@@ -16,9 +16,10 @@ type id = Nntp.id;;
 
 let c () =
   let c = Nntp.connection_as_reader Config.server Config.port in
-  if Config.login <> "" && Config.password <> ""
-  then Nntp.authentificate c Config.login Config.password
-  else c;;
+  ( if Config.login <> "" && Config.password <> ""
+    then Nntp.authentificate c Config.login Config.password
+    else () );
+  c
 
 let post ~subject ~body =
  let c = c () in

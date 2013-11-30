@@ -6,7 +6,7 @@ type article = string list;;
 val mime_headers_text : encoding:string -> string list
 val connection : string -> int -> t
 val connection_as_reader : string -> int -> t
-val authentificate : t -> string -> string -> t
+val authentificate : t -> string -> string -> unit
 val group : t -> string -> ( number * string * string * string )
 val list_group : t -> string -> string -> ( number * string * string * string ) * ( string list)
 val close : t -> unit

@@ -14,10 +14,12 @@ let _ =
 
 let check () =
  let c = Nntp.connection_as_reader Config.server Config.port in
- let c = let login = Config.login and password = Config.password in
-    if login <> "" && password <> "" then Nntp.authentificate c login password else c in
- let wildmat = Wildmat.of_string Config.group and
- tm = snd ( Cadavre.last_time ()) in
+ let login = Config.login and password = Config.password in
+ ( if login <> "" && password <> ""
+   then Nntp.authentificate c login password
+   else () );
+ let wildmat = Wildmat.of_string Config.group
+ and tm = snd ( Cadavre.last_time ()) in
  begin
   try
    let l = Nntp.newnews ~wildmat ~tm c in
