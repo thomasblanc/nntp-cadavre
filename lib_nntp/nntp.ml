@@ -19,7 +19,7 @@ let get_caps c =
   write c.send "CAPABILITIES\r\n" ;
   flush c.send;
   let s = read_line c.get in
-  if ( String.sub s 0 3) = "101"
+  if check_code "101" s
   then
     let r = get_multiline c.get in
     c.caps <-
@@ -46,7 +46,7 @@ let connection server port =
     }
   in
   let s = read_line c.get in
-  if ( String.sub s 0 3) = "200"
+  if check_code "200" s
   then ( get_caps c; c )
   else failwith "Connecting"
 
@@ -60,8 +60,7 @@ let connection_as_reader server port =
       write c.send "MODE READER\r\n" ;
       flush c.send;
       let s = read_line c.get in
-      let code = ( String.sub s 0 3) in
-      if code = "200" || code = "201"
+      if check_code "200" s || check_code "201" s
       then ( get_caps c; c )
       else failwith "unable to switch to reader mode"
     )
@@ -79,10 +78,9 @@ let authentificate c user pass =
           write c.send ("AUTHINFO PASS " ^ pass ^ "\r\n") ; 
           flush c.send;
           let s = read_line c.get in
-          let code = ( String.sub s 0 3) in
-          if code <> "281"
-          then failwith "pad_password"
-          else get_caps c
+          if check_code "281" s
+          then get_caps c
+          else failwith "pad_password"
         )
       else failwith "bad_login"
     end
@@ -149,10 +147,9 @@ let post ~from ~groups ~subject ?(date=Unix.gmtime ( Unix.time () )) ?(additionn
   w "\r\n.\r\n" ;
   flush c.send;
   let s = read_line c.get in
-  let code = ( String.sub s 0 3) in
-  if code <> "240"
-  then failwith "post"
-  else  ()
+  if check_code "240" s
+  then ()
+  else failwith "post"
 
 let newnews ~wildmat ~tm c =
   if not ( has_mode c.caps "NEWNEWS")
